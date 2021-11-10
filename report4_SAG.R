@@ -1,9 +1,18 @@
 
 library(icesTAF)
-taf.library(icesFO)
+library(icesFO)
 library(sf)
 library(ggplot2)
 library(dplyr)
+
+## Run utilies
+source("bootstrap/utilities.r")
+
+# set values for automatic naming of files:
+cap_year <- 2021
+year_cap <- 2021
+cap_month <- "November"
+ecoreg_code <- "NwS"
 
 
 ##########
@@ -17,11 +26,11 @@ catch_trends <- read.taf("model/catch_trends.csv")
 clean_status <- read.taf("data/clean_status.csv")
 
 #set year and month for captions:
-cap_month = "October"
-cap_year = "2020"
-# set year for plot calculations
+# cap_month = "October"
+# cap_year = "2020"
+# # set year for plot calculations
 
-year = 2020
+year = 2021
 
 
 ###########
@@ -37,23 +46,23 @@ unique(trends$FisheriesGuild)
 # 1. Demersal
 #~~~~~~~~~~~
 plot_stock_trends(trends, guild="demersal", cap_year, cap_month , return_data = FALSE)
-ggplot2::ggsave(paste0(year_cap, "_", ecoreg,"_FO_SAG_Trends_demersal.png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
+ggplot2::ggsave(file_name(cap_year,ecoreg_code,"SAG_Trends_demersal", ext = "png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
 
 dat <- plot_stock_trends(trends, guild="demersal", cap_year , cap_month, return_data = TRUE)
-write.taf(dat, file =paste0(year_cap, "_", ecoreg, "_FO_SAG_Trends_demersal.csv"), dir = "report")
+write.taf(dat, file =file_name(cap_year,ecoreg_code,"SAG_Trends_demersal", ext = "csv"), dir = "report")
 
 # 2. Pelagic
 #~~~~~~~~~~~
 plot_stock_trends(trends, guild="pelagic", cap_year, cap_month , return_data = FALSE)
-ggplot2::ggsave(paste0(year_cap, "_", ecoreg, "_FO_SAG_Trends_pelagic.png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
+ggplot2::ggsave(file_name(cap_year,ecoreg_code,"SAG_Trends_pelagic", ext = "png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
 
 dat <- plot_stock_trends(trends, guild="pelagic", cap_year, cap_month, return_data = TRUE)
-write.taf(dat,file =paste0(year_cap, "_", ecoreg, "_FO_SAG_Trends_pelagic.csv"), dir = "report")
+write.taf(dat,file =file_name(cap_year,ecoreg_code,"SAG_Trends_pelagic", ext = "csv"), dir = "report")
 
 # 3. Elasmobranchs
 #~~~~~~~~~~~
 plot_stock_trends(trends, guild="elasmobranch", cap_year, cap_month ,return_data = FALSE )
-ggplot2::ggsave(paste0(year_cap, "_", ecoreg, "_FO_SAG_Trends_elasmobranch.png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
+ggplot2::ggsave(file_name(cap_year,ecoreg_code,"SAG_Trends_elasmobranch", ext = "png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
 
 # trends2 <- trends %>% dplyr::filter(Year > 1980)
 # plot_stock_trends(trends2, guild="elasmobranch", cap_year, cap_month, return_data = FALSE)
@@ -61,7 +70,7 @@ ggplot2::ggsave(paste0(year_cap, "_", ecoreg, "_FO_SAG_Trends_elasmobranch.png")
 
 
 dat <- plot_stock_trends(trends, guild="elasmobranch", cap_year , cap_month , return_data = TRUE)
-write.taf(dat, file =paste0(year_cap, "_", ecoreg, "_FO_SAG_Trends_elasmobranch.csv"), dir = "report" )
+write.taf(dat, file =file_name(cap_year,ecoreg_code,"SAG_Trends_elasmobranch", ext = "csv"), dir = "report" )
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -115,14 +124,14 @@ write.taf(dat, file =paste0(year_cap, "_", ecoreg, "_EO_SAG_SpeciesGuildList.csv
 bar <- plot_CLD_bar(catch_current, guild = "demersal", caption = TRUE, cap_year, cap_month, return_data = FALSE)
 
 bar_dat <- plot_CLD_bar(catch_current, guild = "demersal", caption = TRUE, cap_year , cap_month , return_data = TRUE)
-write.taf(bar_dat, file =paste0(year_cap, "_", ecoreg, "_FO_SAG_Current_demersal.csv"), dir = "report" )
+write.taf(bar_dat, file =file_name(cap_year,ecoreg_code,"SAG_Current_demersal", ext = "csv"), dir = "report" )
 
 kobe <- plot_kobe(catch_current, guild = "demersal", caption = TRUE, cap_year , cap_month , return_data = FALSE)
 #kobe_dat is just like bar_dat with one less variable
 #kobe_dat <- plot_kobe(catch_current, guild = "Demersal", caption = T, cap_year , cap_month , return_data = TRUE)
 
 #Check this file name
-png("report/2020_NwS_FO_SAG_Current_demersal.png",
+png(file_name(cap_year,ecoreg_code,"SAG_Current_demersal", ext = "png"),
     width = 131.32,
     height = 88.9,
     units = "mm",
@@ -137,12 +146,12 @@ dev.off()
 bar <- plot_CLD_bar(catch_current, guild = "pelagic", caption = TRUE, cap_year, cap_month , return_data = FALSE)
 
 bar_dat <- plot_CLD_bar(catch_current, guild = "pelagic", caption = TRUE, cap_year , cap_month , return_data = TRUE)
-write.taf(bar_dat, file =paste0(year_cap, "_", ecoreg, "_FO_SAG_Current_pelagic.csv"), dir = "report")
+write.taf(bar_dat, file =file_name(cap_year,ecoreg_code,"SAG_Current_pelagic", ext = "csv"), dir = "report")
 
 catch_current <- unique(catch_current)
 kobe <- plot_kobe(catch_current, guild = "pelagic", caption = TRUE, cap_year , cap_month , return_data = FALSE)
 #check this file name
-png("report/2020_NwS_FO_SAG_Current_pelagic.png",
+png(file_name(cap_year,ecoreg_code,"SAG_Current_pelagic", ext = "png"),
     width = 131.32,
     height = 88.9,
     units = "mm",
@@ -179,11 +188,14 @@ dev.off()
 bar <- plot_CLD_bar(catch_current, guild = "All", caption = TRUE, cap_year , cap_month , return_data = FALSE)
 
 bar_dat <- plot_CLD_bar(catch_current, guild = "All", caption = TRUE, cap_year, cap_month , return_data = TRUE)
-write.taf(bar_dat, file =paste0(year_cap, "_", ecoreg, "_FO_SAG_Current_All.csv"), dir = "report" )
+write.taf(bar_dat, file =file_name(cap_year,ecoreg_code,"SAG_Current_All", ext = "csv"), dir = "report" )
 
-kobe <- plot_kobe(catch_current, guild = "All", caption = TRUE, cap_year, cap_month , return_data = FALSE)
+top_10 <- bar_dat %>% top_n(10, total)
+bar <- plot_CLD_bar(top_10, guild = "All", caption = TRUE, cap_year , cap_month , return_data = FALSE)
+
+kobe <- plot_kobe(top_10, guild = "All", caption = TRUE, cap_year, cap_month , return_data = FALSE)
 #check this file name
-png("report/2020_NwS_FO_SAG_Current_All.png",
+png(file_name(cap_year,ecoreg_code,"SAG_Current_All", ext = "png"),
     width = 131.32,
     height = 88.9,
     units = "mm",
@@ -209,7 +221,7 @@ discardsA <- plot_discard_trends(catch_trends2, year, cap_year, cap_month )
 # discardsA <- plot_discard_trends(catch_trends2, 2019, cap_year, cap_month )
 
 dat <- plot_discard_trends(catch_trends, year, cap_year , cap_month , return_data = TRUE)
-write.taf(dat, file =paste0(year_cap, "_", ecoreg, "_FO_SAG_Discards_trends.csv"), dir = "report" )
+write.taf(dat, file =file_name(cap_year,ecoreg_code,"SAG_Discards_trends", ext = "csv"), dir = "report" )
 
 catch_trends2 <- catch_trends %>% filter(FisheriesGuild != "elasmobranch")
 discardsB <- plot_discard_current(catch_trends2, year,position_letter = "b)", cap_year , cap_month , caption = FALSE)
@@ -219,10 +231,10 @@ discardsC <- plot_discard_current(catch_trends, year,position_letter = "c)", cap
 
 #Need to change order?
 dat <- plot_discard_current(catch_trends, year, cap_year, cap_month , return_data = TRUE)
-write.taf(dat, file =paste0(year_cap,"_", ecoreg, "_FO_SAG_Discards_current.csv"),dir = "report" )
+write.taf(dat, file =file_name(cap_year,ecoreg_code,"SAG_Discards_current", ext = "csv"),dir = "report" )
 
 cowplot::plot_grid(discardsA, discardsB, discardsC, align = "h",nrow = 1, rel_widths = 1, rel_heights = 1)
-ggplot2::ggsave(paste0(year_cap,"_", ecoreg, "_FO_SAG_Discards_new.png"),path = "report/", width = 220.32, height = 88.9, units = "mm", dpi = 300)
+ggplot2::ggsave(file_name(cap_year,ecoreg_code,"SAG_Discards", ext = "png"),path = "report/", width = 220.32, height = 88.9, units = "mm", dpi = 300)
 
 
 #~~~~~~~~~~~~~~~#
@@ -240,20 +252,20 @@ clean_status$FishingPressure <- gsub("qual_GREEN", "GREEN", clean_status$Fishing
 # clean_status2 <- clean_status
 # clean_status2$FishingPressure <- gsub("qual_GREEN", "GREEN", clean_status2$FishingPressure)
 plot_status_prop_pies(clean_status, cap_month, cap_year)
-ggplot2::ggsave(paste0(year_cap,"_", ecoreg, "_FO_SAG_ICESpies.png"), path= "report/", width = 178, height = 178, units = "mm", dpi = 300)
+ggplot2::ggsave(file_name(cap_year,ecoreg_code,"SAG_ICESpies", ext = "png"), path= "report/", width = 178, height = 178, units = "mm", dpi = 300)
 
 dat <- plot_status_prop_pies(clean_status, cap_month, cap_year, return_data = TRUE)
-write.taf(dat, file= paste0(year_cap,"_", ecoreg, "_FO_SAG_ICESpies.csv"),dir ="report")
+write.taf(dat, file= file_name(cap_year,ecoreg_code,"SAG_ICESpies", ext = "csv"),dir ="report")
 
 #~~~~~~~~~~~~~~~#
 #E. GES pies
 #~~~~~~~~~~~~~~~#
 
 plot_GES_pies(clean_status, catch_current, cap_month, cap_year)
-ggplot2::ggsave(paste0(year_cap,"_",ecoreg,"_FO_SAG_GESpies.png"),path = "report",width = 178, height = 178, units = "mm",dpi = 300)
+ggplot2::ggsave(file_name(cap_year,ecoreg_code,"SAG_GESpies", ext = "png"),path = "report",width = 178, height = 178, units = "mm",dpi = 300)
 
 dat <- plot_GES_pies(clean_status, catch_current, cap_month, cap_year, return_data = TRUE)
-write.taf(dat, file = paste0(year_cap,"_",ecoreg, "_FO_SAG_GESpies.csv"),dir ="report")
+write.taf(dat, file = file_name(cap_year,ecoreg_code,"SAG_GESpies", ext = "csv"),dir ="report")
 
 #~~~~~~~~~~~~~~~#
 #F. ANNEX TABLE
@@ -262,8 +274,9 @@ write.taf(dat, file = paste0(year_cap,"_",ecoreg, "_FO_SAG_GESpies.csv"),dir ="r
 
 dat <- format_annex_table(clean_status, year)
 
-write.taf(dat, file = paste0(year_cap,"_", ecoreg, "_FO_SAG_annex_table.csv"), dir = "report", quote = TRUE)
+write.taf(dat, file = file_name(cap_year,ecoreg_code,"SAG_annex_table", ext = "csv"), dir = "report", quote = TRUE)
 
+html_annex_table(dat, cap_year, ecoreg_code)
 # This annex table has to be edited by hand,
 # For SBL and GES only one values is reported,
 # the one in PA for SBL and the one in MSY for GES
