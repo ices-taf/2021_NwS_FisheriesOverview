@@ -31,8 +31,14 @@ sag_sum <- read.taf("bootstrap/data/SAG_data/SAG_summary.csv")
 sag_refpts <- read.taf("bootstrap/data/SAG_data/SAG_refpts.csv")
 sag_status <- read.taf("bootstrap/data/SAG_data/SAG_status.csv")
 
-clean_sag <- format_sag(sag_sum, sag_refpts, 2021, "Norwegian Sea")
-clean_status <- format_sag_status(sag_status, 2021, "Norwegian Sea")
+refpts$Bpa[which(refpts$StockKeyLabel == "ghl.27.1-2")] <- NA
+refpts$FMSY[which(refpts$StockKeyLabel == "pok.27.1-2")] <- 0.32
+refpts$MSYBtrigger[which(refpts$StockKeyLabel == "pok.27.1-2")] <- 220000
+
+
+
+clean_sag <- format_sag(summary, refpts, 2021, "Norwegian Sea")
+clean_status <- format_sag_status(status, 2021, "Norwegian Sea")
 
 Norwegian_stockList <- c("aru.27.123a4",
                          "bli.27.nea",
@@ -40,7 +46,7 @@ Norwegian_stockList <- c("aru.27.123a4",
                          "bsk.27.nea",
                          "cap.27.2a514",
                          "cod.27.1-2",
-                         "cod.27.1-2coast",
+                         "cod.27.2.coastS",
                          "dgs.27.nea",
                          "gfb.27.nea",
                          "ghl.27.1-2",

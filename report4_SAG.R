@@ -45,6 +45,8 @@ unique(trends$FisheriesGuild)
 
 # 1. Demersal
 #~~~~~~~~~~~
+trends <- trends %>% filter(StockKeyLabel != "ghl.27.1-2")
+trends <- trends %>% filter(StockKeyLabel != "cod.27.1-2.coastN")
 plot_stock_trends(trends, guild="demersal", cap_year, cap_month , return_data = FALSE)
 ggplot2::ggsave(file_name(cap_year,ecoreg_code,"SAG_Trends_demersal", ext = "png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
 
@@ -53,6 +55,7 @@ write.taf(dat, file =file_name(cap_year,ecoreg_code,"SAG_Trends_demersal", ext =
 
 # 2. Pelagic
 #~~~~~~~~~~~
+trends <- trends %>% filter(StockKeyLabel != "bsf.27.nea")
 plot_stock_trends(trends, guild="pelagic", cap_year, cap_month , return_data = FALSE)
 ggplot2::ggsave(file_name(cap_year,ecoreg_code,"SAG_Trends_pelagic", ext = "png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
 
@@ -92,7 +95,7 @@ trends3 <- trends2%>% filter(Metric == "F_FMSY")
 plot_guild_trends(trends3, cap_year, cap_month,return_data = FALSE )
 # guild2 <- guild2 %>% filter(FisheriesGuild != "MEAN")
 # plot_guild_trends(guild2, cap_year , cap_month,return_data = FALSE )
-ggplot2::ggsave(paste0(year_cap, "_", ecoreg, "_EO_SAG_GuildTrends_F.png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
+ggplot2::ggsave(paste0(year_cap, "_", ecoreg_code, "_EO_SAG_GuildTrends_F.png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
 # ggplot2::ggsave("2019_BtS_EO_GuildTrends_noMEAN_F.png", path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
 
 
@@ -102,18 +105,18 @@ trends3 <- trends2%>% filter(Metric == "SSB_MSYBtrigger")
 # guild3 <- guild2 %>% dplyr::filter(FisheriesGuild != "MEAN")
 trends3 <- trends3 %>% filter(Year > 1960)
 plot_guild_trends(trends3, cap_year, cap_month,return_data = FALSE )
-ggplot2::ggsave(paste0(year_cap, "_", ecoreg, "_EO_SAG_GuildTrends_SSB_1960.png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
+ggplot2::ggsave(paste0(year_cap, "_", ecoreg_code, "_EO_SAG_GuildTrends_SSB_1960.png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
 # ggplot2::ggsave(paste0(year_cap, "_", ecoreg, "_EO_SAG_GuildTrends_SSB_1900.png"), path = "report/", width = 178, height = 130, units = "mm", dpi = 300)
 
 dat <- plot_guild_trends(trends2, cap_year, cap_month ,return_data = TRUE)
-write.taf(dat, file =paste0(year_cap, "_", ecoreg, "_EO_SAG_GuildTrends.csv"), dir = "report" )
+write.taf(dat, file =paste0(year_cap, "_", ecoreg_code, "_EO_SAG_GuildTrends.csv"), dir = "report" )
 
 dat <- trends2[,1:2]
 dat <- unique(dat)
 dat <- dat %>% filter(StockKeyLabel != "MEAN")
 dat2 <- sid %>% select(c(StockKeyLabel, StockKeyDescription))
 dat <- left_join(dat,dat2)
-write.taf(dat, file =paste0(year_cap, "_", ecoreg, "_EO_SAG_SpeciesGuildList.csv"), dir = "report", quote = TRUE )
+write.taf(dat, file =paste0(year_cap, "_", ecoreg_code, "_EO_SAG_SpeciesGuildList.csv"), dir = "report", quote = TRUE )
 
 #~~~~~~~~~~~~~~~#
 # B.Current catches
@@ -190,10 +193,10 @@ bar <- plot_CLD_bar(catch_current, guild = "All", caption = TRUE, cap_year , cap
 bar_dat <- plot_CLD_bar(catch_current, guild = "All", caption = TRUE, cap_year, cap_month , return_data = TRUE)
 write.taf(bar_dat, file =file_name(cap_year,ecoreg_code,"SAG_Current_All", ext = "csv"), dir = "report" )
 
-top_10 <- bar_dat %>% top_n(10, total)
-bar <- plot_CLD_bar(top_10, guild = "All", caption = TRUE, cap_year , cap_month , return_data = FALSE)
+# top_10 <- bar_dat %>% top_n(10, total)
+# bar <- plot_CLD_bar(top_10, guild = "All", caption = TRUE, cap_year , cap_month , return_data = FALSE)
 
-kobe <- plot_kobe(top_10, guild = "All", caption = TRUE, cap_year, cap_month , return_data = FALSE)
+kobe <- plot_kobe(catch_current, guild = "All", caption = TRUE, cap_year, cap_month , return_data = FALSE)
 #check this file name
 png(file_name(cap_year,ecoreg_code,"SAG_Current_All", ext = "png"),
     width = 131.32,
@@ -248,6 +251,7 @@ clean_status$StockSize <- gsub("qual_RED", "RED", clean_status$StockSize)
 
 unique(clean_status$FishingPressure)
 clean_status$FishingPressure <- gsub("qual_GREEN", "GREEN", clean_status$FishingPressure)
+clean_status$FishingPressure <- gsub("qual_RED", "RED", clean_status$FishingPressure)
 
 # clean_status2 <- clean_status
 # clean_status2$FishingPressure <- gsub("qual_GREEN", "GREEN", clean_status2$FishingPressure)
